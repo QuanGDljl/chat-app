@@ -10,16 +10,16 @@ const wss = new WebSocket.Server({ server });
 // 静态文件服务
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 存储连接的客户端，最多2个
+// 存储连接的客户端，最多3个
 let clients = [];
 let userCount = 0;
 
 wss.on('connection', (ws) => {
-  // 超过2人拒绝连接
-  if (clients.length >= 2) {
+  // 超过3人拒绝连接
+  if (clients.length >= 3) {
     ws.send(JSON.stringify({
       type: 'error',
-      message: '聊天室已满，最多支持2人同时聊天'
+      message: '聊天室已满，最多支持3人同时聊天'
     }));
     ws.close();
     return;
@@ -30,7 +30,7 @@ wss.on('connection', (ws) => {
   const userId = userCount;
   clients.push({ ws, userId });
 
-  console.log(`用户 ${userId} 已连接，当前在线: ${clients.length}/2`);
+  console.log(`用户 ${userId} 已连接，当前在线: ${clients.length}/3`);
 
   // 通知所有人用户加入
   broadcast({
@@ -80,7 +80,7 @@ wss.on('connection', (ws) => {
   // 处理断开连接
   ws.on('close', () => {
     clients = clients.filter(client => client.ws !== ws);
-    console.log(`用户 ${userId} 已断开连接，当前在线: ${clients.length}/2`);
+    console.log(`用户 ${userId} 已断开连接，当前在线: ${clients.length}/3`);
 
     broadcast({
       type: 'system',
@@ -108,5 +108,5 @@ const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
   console.log(`服务器运行在 http://localhost:${PORT}`);
-  console.log(`WebSocket 服务已启动，支持最多2人同时聊天`);
+  console.log(`WebSocket 服务已启动，支持最多3人同时聊天`);
 });

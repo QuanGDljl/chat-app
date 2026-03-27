@@ -1,8 +1,11 @@
 {
   "name": "realtime-chat-app",
   "version": "1.0.0",
-  "description": "Simple realtime two-person chat application",
+  "description": "Simple realtime three-person chat application",
   "main": "server.js",
+  "engines": {
+    "node": ">=16.x"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
